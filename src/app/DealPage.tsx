@@ -4,6 +4,8 @@ import { formatUnits, keccak256, toBytes } from 'viem'
 import { Shell, useTx } from './shared'
 import { SPAN_ADDRESS, USDC_ADDRESS, addressUrl, publicClient, short } from '../span/chain'
 import { STATUS, erc20Abi, spanAbi } from '../span/abi'
+import { Flap, toneFor } from '../dep/Flap'
+import { UsdcMark } from '../dep/SpanLogo'
 
 type Deal = {
   host: `0x${string}`
@@ -17,6 +19,7 @@ type Deal = {
 type Stats = readonly [number, number, number, number]
 
 const DAY = 24 * 3600
+const STATUS_CODE = ['OPEN', 'LOCKED', 'DISPUTED', 'CLOSED'] as const
 const fmt = (raw: bigint) => Number(formatUnits(raw, 6)).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 6 })
 const when = (s: bigint) =>
   new Date(Number(s) * 1000).toLocaleString(undefined, { weekday: 'short', day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' })
@@ -95,7 +98,12 @@ export default function DealPage({ id, title }: { id: bigint; title: string | nu
     <Shell>
       <section className="deal">
         <div className="deal__head">
-          <p className="deal__no">Span {id.toString()}</p>
+          <div className="deal__flaps">
+            <p className="deal__no">
+              <Flap text={`SPAN #${id}`} tone="amber" label={`Span ${id}`} />
+            </p>
+            <Flap text={STATUS_CODE[deal.status] ?? 'CLOSED'} tone={toneFor(STATUS_CODE[deal.status] ?? 'CLOSED')} delay={250} />
+          </div>
           <h1 className="display display--s">{titleOk ? title : 'Holding deposit'}</h1>
           {title !== null && !titleOk && <p className="warn">The description in this link was changed after the Span was opened. Ask the host for the original link.</p>}
           <p className="deal__host">
@@ -110,7 +118,9 @@ export default function DealPage({ id, title }: { id: bigint; title: string | nu
 
         <div className="deal__amount">
           <b>{amt}</b>
-          <span>USDC deposit</span>
+          <span>
+            <UsdcMark size={16} /> USDC deposit
+          </span>
           <p>The host has already locked {amt} USDC as a bond.</p>
         </div>
 

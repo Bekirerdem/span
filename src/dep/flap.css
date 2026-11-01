@@ -1,0 +1,183 @@
+/* Split-flap tiles. Size everything from --fs on any ancestor. */
+.flap {
+  display: inline-flex;
+  gap: 1px;
+  font: 600 var(--fs, 13px) / 1 var(--flap-font);
+  text-transform: uppercase;
+  vertical-align: middle;
+  white-space: nowrap;
+  contain: layout paint style;
+}
+.flap--amber { --ink: var(--amber); }
+.flap--green { --ink: var(--green); }
+.flap--red { --ink: var(--red); }
+.flap--ivory { --ink: var(--ivory); }
+.flap--soft { --ink: var(--ivory-soft); }
+
+.fl-tile {
+  position: relative;
+  display: inline-block;
+  width: calc(var(--fs, 13px) * 0.74);
+  height: calc(var(--fs, 13px) * 1.55);
+  perspective: 400px;
+  color: var(--ink, var(--ivory));
+  contain: layout paint style;
+}
+.fl-half,
+.fl-leaf {
+  position: absolute;
+  left: 0;
+  right: 0;
+  height: 50%;
+  overflow: hidden;
+}
+.fl-top,
+.fl-lt {
+  top: 0;
+  background: var(--flap-top);
+  border-radius: 3px 3px 0 0;
+}
+.fl-bot,
+.fl-lb {
+  bottom: 0;
+  background: var(--flap-bottom);
+  border-radius: 0 0 3px 3px;
+}
+.fl-half i,
+.fl-leaf i {
+  position: absolute;
+  left: 0;
+  right: 0;
+  height: 200%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-style: normal;
+}
+.fl-top i,
+.fl-lt i { top: 0; }
+.fl-bot i,
+.fl-lb i { bottom: 0; }
+
+@property --sh {
+  syntax: '<number>';
+  inherits: false;
+  initial-value: 0;
+}
+.fl-leaf {
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+}
+/* a layer only while the leaf is actually moving */
+.fl-leaf.is-flipping { will-change: transform; }
+/* the soft click shadow rides on the leaf's own animation */
+.fl-leaf::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: #000;
+  opacity: var(--sh);
+  pointer-events: none;
+}
+.fl-lt { transform-origin: 50% 100%; z-index: 3; }
+.fl-lb { transform-origin: 50% 0; transform: rotateX(90deg); z-index: 4; }
+
+.fl-hinge {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: calc(50% - 0.5px);
+  height: 1px;
+  background: rgba(0, 0, 0, 0.75);
+  box-shadow: 0 1px 0 rgba(255, 255, 255, 0.04);
+  z-index: 5;
+}
+
+/*
+ * Departures board housing. Martian Mono advances 0.70em, so a tile 0.74em wide holds a glyph with room to
+ * spare; --tw is one tile plus its 1px gap, and every column is a fixed number of tiles wide.
+ */
+.dboard {
+  --fs: clamp(13px, 1vw, 16px);
+  --tw: calc(var(--fs) * 0.74 + 1px);
+  /* 1.5 tile widths between every column */
+  --cg: calc(var(--tw) * 1.5);
+  position: relative;
+  width: fit-content;
+  max-width: 100%;
+  background: var(--housing);
+  border: 1px solid rgba(242, 234, 219, 0.08);
+  border-radius: 14px;
+  box-shadow: 0 40px 80px -30px rgba(0, 0, 0, 0.8), inset 0 1px 0 rgba(242, 234, 219, 0.05);
+  overflow: hidden;
+}
+.dboard::before {
+  content: '';
+  position: absolute;
+  left: 8%;
+  right: 8%;
+  top: 0;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, var(--amber), transparent);
+  box-shadow: 0 0 22px 2px rgba(255, 181, 71, 0.55);
+}
+.dboard__head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 16px 12px 12px;
+}
+.dboard__kicker { font: 500 var(--t-label) / 1.2 var(--flap-font); letter-spacing: 0.12em; text-transform: uppercase; color: var(--amber); }
+.dboard__clock { display: flex; align-items: center; gap: 8px; color: var(--ivory-soft); font: 500 var(--t-label) var(--flap-font); letter-spacing: 0.12em; }
+.dboard__clock .flap { --fs: 13px; }
+.dboard__scroll { overflow-x: auto; scrollbar-width: thin; scrollbar-color: rgba(242, 234, 219, 0.2) transparent; }
+.dboard__table { min-width: max-content; padding: 0 12px 8px; }
+.drow {
+  display: grid;
+  align-items: center;
+  column-gap: var(--cg);
+  padding: 7px 0;
+  border-top: 1px solid rgba(242, 234, 219, 0.06);
+}
+.drow--head { padding: 6px 0 8px; border-top: 0; }
+.drow--head span {
+  font: 500 var(--t-label) / 1 var(--flap-font);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--ivory-soft);
+}
+.drow__cell { display: flex; align-items: center; min-width: 0; }
+.drow__cell--r { justify-content: flex-end; font-variant-numeric: tabular-nums; }
+.drow a.drow__cell, .drow__link { color: inherit; text-decoration: none; }
+.drow__led {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #3a3226;
+  transition: background 0.4s, box-shadow 0.4s;
+}
+.drow__led.on { background: var(--amber); box-shadow: 0 0 10px 2px rgba(255, 181, 71, 0.7); }
+.drow__led.red { background: var(--red); box-shadow: 0 0 10px 2px rgba(226, 81, 59, 0.6); }
+.dboard__foot {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 16px;
+  justify-content: space-between;
+  padding: 12px 12px 16px;
+  border-top: 1px solid rgba(242, 234, 219, 0.06);
+  font: 500 var(--t-label) / 1.4 var(--flap-font);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--ivory-soft);
+}
+.dboard__foot a { color: var(--amber); text-underline-offset: 3px; }
+
+/* the status column stays in view whenever a board has to scroll sideways */
+.drow__cell--status { position: sticky; right: 0; background: var(--housing); }
+.drow--link:hover .drow__cell--status { background: #17181d; }
+
+@media (max-width: 760px) {
+  .dboard { --fs: 13px; }
+  .drow__cell--status { padding-left: 10px; box-shadow: -14px 0 14px -6px var(--housing); }
+}

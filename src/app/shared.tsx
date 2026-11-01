@@ -5,14 +5,15 @@ import { toast } from 'sonner'
 import { BaseError, type Abi } from 'viem'
 import { publicClient, spanChain, txUrl } from '../span/chain'
 import { navigate } from '../router'
-import { SpanLogo } from '../board/SpanLogo'
+import { SpanLogo } from '../dep/SpanLogo'
+import '../dep/app.css'
 
 export function Shell({ children }: { children: ReactNode }) {
   return (
     <div className="app">
       <header className="top top--app">
         <a className="wordmark" href="/" onClick={(e) => (e.preventDefault(), navigate('/'))}>
-          <SpanLogo size={22} /> Span
+          <SpanLogo size={24} /> Span
         </a>
         <ConnectKitButton.Custom>
           {({ isConnected, show, truncatedAddress }) => (

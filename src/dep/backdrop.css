@@ -1,0 +1,83 @@
+/*
+ * The chart stage is framed for the route scene: it is 136.4% of the container tall (at least cover-wide), so
+ * the Porto -> Lisbon segment (chart 46%,21% -> 42.5%,65%) spans the middle of the screen: Porto about 22% from
+ * the top, Lisbon about 82%, the route near 52% from the left. The fixed background chart, the route, the plane,
+ * the dots and the waypoint cards all use this one box, so they stay on the real coast at every viewport size.
+ */
+.bg,
+.route__map {
+  container-type: size;
+}
+.chart-stage {
+  --ch: max(136.4cqh, calc(100cqw / 1.7924));
+  --cw: calc(var(--ch) * 1.7924);
+  position: absolute;
+  height: var(--ch);
+  width: var(--cw);
+  top: calc(22cqh - 0.21 * var(--ch));
+  left: clamp(calc(100cqw - var(--cw)), calc(52cqw - 0.44 * var(--cw)), 0px);
+}
+.chart-stage img { display: block; width: 100%; height: 100%; object-fit: cover; }
+
+.bg {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  overflow: hidden;
+  pointer-events: none;
+  background: var(--night);
+}
+.bg > * { position: absolute; }
+.bg__termgroup { inset: -4% -2%; will-change: transform; }
+.bg__term {
+  position: absolute;
+  inset: 0;
+  background: url('/dep/terminal.webp') center / cover no-repeat;
+}
+/* a static, pre-blurred copy: only its opacity ever changes */
+.bg__term--soft { filter: blur(6px); opacity: 0; transform: scale(1.04); will-change: opacity; }
+.bg__chart { opacity: 0; }
+.bg__chart::after { content: ''; position: absolute; inset: 0; background: rgba(0, 0, 0, 0.4); }
+.bg__shade {
+  inset: 0;
+  background:
+    linear-gradient(180deg, rgba(8, 19, 42, 0.85), rgba(8, 19, 42, 0.55)),
+    radial-gradient(120% 90% at 50% 0%, rgba(8, 19, 42, 0) 40%, rgba(8, 19, 42, 0.5) 100%);
+}
+/* the radial gradients are already soft: no filter, transform-only drift */
+.bg__glow { width: 70vmax; height: 70vmax; border-radius: 50%; will-change: transform; }
+.bg__glow--amber {
+  left: -25vmax;
+  bottom: -35vmax;
+  background: radial-gradient(closest-side, rgba(255, 181, 71, 0.34), rgba(255, 181, 71, 0));
+  animation: drift-a 46s ease-in-out infinite alternate;
+}
+.bg__glow--blue {
+  right: -28vmax;
+  top: -38vmax;
+  background: radial-gradient(closest-side, rgba(39, 80, 160, 0.5), rgba(13, 30, 61, 0));
+  animation: drift-b 58s ease-in-out infinite alternate;
+}
+@keyframes drift-a { to { transform: translate3d(8vmax, -5vmax, 0) scale(1.08); } }
+@keyframes drift-b { to { transform: translate3d(-7vmax, 6vmax, 0) scale(1.12); } }
+.bg__runway {
+  left: 0;
+  bottom: 0;
+  width: 100%;
+  height: 32vh;
+  opacity: 0.3;
+  transition: opacity 0.6s;
+}
+.bg__runway.off { opacity: 0; }
+.bg__sheen {
+  inset: -30px;
+  will-change: transform;
+  background: linear-gradient(115deg, transparent 30%, rgba(242, 234, 219, 0.04) 42%, rgba(242, 234, 219, 0.08) 46%, transparent 56%),
+    linear-gradient(115deg, transparent 62%, rgba(242, 234, 219, 0.03) 70%, transparent 76%);
+}
+/* a 128px pre-rendered noise tile, tiled */
+.bg__grain { inset: 0; opacity: 0.05; background: url('/dep/grain.png') repeat; background-size: 128px 128px; }
+
+@media (prefers-reduced-motion: reduce) {
+  .bg__glow { animation: none; }
+}

@@ -1,0 +1,141 @@
+/* ---- the route ---- */
+.route__pin { position: relative; display: block; height: 100vh; padding: 0; overflow: hidden; }
+.route__pin .scene__in { position: absolute; inset: 0; }
+.route__map { position: absolute; inset: 0; }
+.route__stage { pointer-events: none; }
+.route__stage img { display: block; width: 100%; height: 100%; filter: brightness(0.6); }
+.route__svg { position: absolute; inset: 0; z-index: 1; width: 100%; height: 100%; overflow: visible; }
+.route__plane { fill: var(--ivory); }
+.route__dot { opacity: 0; transform: scale(0.3); transform-box: fill-box; transform-origin: center; transition: opacity 0.3s, transform 0.55s cubic-bezier(0.34, 1.56, 0.64, 1); }
+.route__dot.on { opacity: 1; transform: scale(1); }
+.route__ring { fill: rgba(8, 19, 42, 0.8); stroke: var(--amber); stroke-width: 5; }
+.route__core { fill: var(--amber); }
+
+/* headline top-left on the container edge; the boarding pass right-centre, clear of the cards */
+.route__ui { position: absolute; z-index: 2; top: calc(var(--nav-h) + 16px); left: 0; right: 0; pointer-events: none; }
+.route__ui .scene-head { max-width: min(520px, 36vw); margin-bottom: 0; }
+.route__ui .display { text-shadow: 0 2px 30px rgba(8, 19, 42, 0.8); }
+.route__pass { position: absolute; z-index: 2; top: 50%; left: 0; right: 0; transform: translateY(-50%); pointer-events: none; }
+.route__pass .wrap { display: flex; justify-content: flex-end; }
+.pass {
+  width: clamp(220px, 17vw, 290px);
+  background: var(--ivory);
+  color: var(--night);
+  border-radius: 14px;
+  box-shadow: 0 30px 60px -24px rgba(0, 0, 0, 0.8);
+  overflow: hidden;
+  pointer-events: auto;
+}
+.pass__mid {
+  margin: 0;
+  padding: 10px 14px;
+  background: var(--night);
+  color: var(--amber);
+  font: 500 var(--t-label) / 1.2 var(--flap-font);
+  letter-spacing: 0.12em;
+  text-align: left;
+}
+.pass__row { position: relative; display: grid; grid-template-columns: 1fr 0 1fr; }
+.pass__stub { padding: 14px 14px 16px; min-width: 0; }
+.pass__tear { position: relative; border-left: 2px dashed rgba(8, 19, 42, 0.35); margin: 0; }
+.pass__tear::before,
+.pass__tear::after { content: ''; position: absolute; left: -11px; width: 20px; height: 20px; border-radius: 50%; background: #0a1730; }
+.pass__tear::before { top: -10px; }
+.pass__tear::after { bottom: -10px; }
+.pass__k { margin: 0; font: 500 var(--t-label) / 1.2 var(--flap-font); letter-spacing: 0.12em; color: var(--amber-dim); }
+.pass__name { margin: 2px 0 8px; font: 800 var(--t-h3) / 1 var(--display); letter-spacing: -0.03em; }
+.pass__amt { display: flex; align-items: center; gap: 6px; margin: 0; font: 500 var(--t-meta) var(--flap-font); flex-wrap: wrap; font-variant-numeric: tabular-nums; }
+
+/* waypoint cards: 56px from the dot, leader line back to it, odd cards right, even cards left */
+.wp {
+  position: absolute;
+  z-index: 3;
+  width: clamp(210px, 20vw, 290px);
+  padding: 13px 15px 14px;
+  background: rgba(8, 19, 42, 0.92);
+  border: 1px solid rgba(242, 234, 219, 0.14);
+  border-radius: 14px;
+  opacity: 0;
+  transition: opacity 0.35s, transform 0.55s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+.wp::before { content: ''; position: absolute; top: 50%; width: 56px; height: 1px; background: var(--amber); opacity: 0.85; }
+.wp--r { transform: translate(56px, -50%) scale(0.85); transform-origin: left center; }
+.wp--r::before { right: 100%; }
+.wp--l { transform: translate(calc(-100% - 56px), -50%) scale(0.85); transform-origin: right center; }
+.wp--l::before { left: 100%; }
+.wp.on { opacity: 1; }
+.wp--r.on { transform: translate(56px, -50%) scale(1); }
+.wp--l.on { transform: translate(calc(-100% - 56px), -50%) scale(1); }
+.wp__text { margin: 0 0 9px; max-width: 26ch; font-size: 16px; line-height: 1.4; color: var(--ivory); text-wrap: pretty; }
+.chip { display: inline-flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+.chip__k { font: 500 var(--t-label) / 1 var(--flap-font); letter-spacing: 0.12em; color: var(--ivory-soft); text-transform: uppercase; }
+.chip .flap { --fs: 12px; }
+.count { font-variant-numeric: tabular-nums; }
+
+/* route in normal flow (tablet and mobile): headline, map, the four waypoints, the pass */
+.route.is-flow .route__pin { height: auto; overflow: visible; padding: 56px 0; }
+.route.is-flow .route__pin .scene__in { position: static; display: flex; flex-direction: column; gap: 28px; }
+.route.is-flow .route__ui { position: static; order: 1; pointer-events: auto; }
+.route.is-flow .route__ui .scene-head { max-width: none; }
+.route.is-flow .route__map {
+  position: relative;
+  inset: auto;
+  order: 2;
+  width: calc(100% - 2 * var(--pad));
+  max-width: var(--container);
+  height: 60vh;
+  margin-inline: auto;
+  border-radius: 14px;
+  overflow: hidden;
+}
+.route.is-flow .route__list { order: 3; }
+.route.is-flow .route__pass { position: static; order: 4; transform: none; pointer-events: auto; }
+.route.is-flow .route__pass .wrap { justify-content: flex-start; }
+.route.is-flow .pass { width: min(100%, 420px); }
+.route__list { list-style: none; margin: 0 auto; padding: 0 var(--pad); width: 100%; max-width: calc(var(--container) + 2 * var(--pad)); display: grid; gap: 12px; }
+.wp--list { position: static; width: auto; transform: translateY(14px) scale(0.98); opacity: 0.35; }
+.wp--list::before { display: none; }
+.wp--list.on { opacity: 1; transform: none; }
+
+/* ---- the rule: board on columns 1-8, the law footnote on 9-12 ---- */
+.rule__grid { align-items: end; row-gap: 32px; }
+.rule__board { grid-column: 1 / 9; min-width: 0; }
+.amt { display: inline-flex; align-items: center; gap: 7px; font: 500 var(--t-meta) / 1 var(--flap-font); color: var(--ivory); font-variant-numeric: tabular-nums; white-space: nowrap; }
+.amt__x { color: var(--ivory-soft); }
+.rule__foot {
+  grid-column: 9 / 13;
+  margin: 0;
+  padding: 16px 0 0;
+  max-width: 60ch;
+  border-top: 1px solid rgba(255, 181, 71, 0.5);
+  font-size: var(--t-body);
+  line-height: 1.55;
+  color: var(--ivory-soft);
+  opacity: 0;
+  transform: translateY(10px);
+  transition: opacity 0.6s, transform 0.6s;
+  text-wrap: pretty;
+}
+.rule__foot.on { opacity: 1; transform: none; }
+
+/* ---- live board ---- */
+.live__inner { padding-block: 120px 40px; }
+.live .lead { max-width: 60ch; font-size: var(--t-body); }
+.drow--link { text-decoration: none; color: inherit; transition: background 0.2s; }
+.drow--link:hover { background: rgba(255, 181, 71, 0.07); }
+
+@media (max-width: 1200px) {
+  .route__pass { top: auto; bottom: 28px; transform: none; }
+}
+@media (max-width: 1024px) {
+  .rule__board, .rule__foot { grid-column: 1 / 13; }
+  .rule__foot { opacity: 1; transform: none; }
+}
+
+/* one-shot entrance for content that is not pinned */
+.will-rise { opacity: 0; transform: translateY(40px); transition: opacity 0.8s ease, transform 0.9s cubic-bezier(0.16, 1, 0.3, 1); }
+.will-rise.is-in { opacity: 1; transform: none; }
+@media (prefers-reduced-motion: reduce) {
+  .will-rise { opacity: 1; transform: none; transition: none; }
+  .wp, .wp--list, .rule__foot, .route__dot { transition: none; }
+}

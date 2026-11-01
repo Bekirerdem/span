@@ -34,7 +34,7 @@ The mainnet contract was deployed with the exact bytecode compiled from `contrac
 
 - Solidity 0.8.28 with Foundry and OpenZeppelin
 - React, Vite, TypeScript, wagmi, viem, ConnectKit
-- GSAP and Lenis for the scroll animation
+- GSAP and Lenis for the scroll animation; a split-flap departures board built in React
 - Arc, USDC
 - A Cloudflare Pages Function (`functions/rpc.ts`) relays read-only RPC calls from the browser when hosted
 
@@ -60,3 +60,4 @@ The suite in `contracts/test/Span.t.sol` covers every path above, the time-windo
 ### Environment variables
 
 - `VITE_SPAN_NETWORK`: set to `testnet` to point the app at the Arc Testnet deployment. Leave it unset for Arc mainnet.
+- `VITE_GITHUB_URL`: optional. When set, the landing footer shows a GitHub link to it.

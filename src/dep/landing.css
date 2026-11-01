@@ -1,0 +1,172 @@
+.landing {
+  position: relative;
+  z-index: 1;
+  /* the hero board bleeds to the viewport edge; never let it make the page scroll sideways */
+  overflow-x: clip;
+  --bleed: calc((100vw - min(100vw, var(--container) + 2 * var(--pad))) / 2 + var(--pad));
+}
+
+/* buttons: the pill is reserved for the one primary action */
+.btn-primary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 52px;
+  padding: 0 30px;
+  border: 0;
+  border-radius: 999px;
+  background: var(--amber);
+  color: var(--night);
+  font: 600 var(--t-body) / 1 var(--body);
+  text-decoration: none;
+  cursor: pointer;
+  box-shadow: 0 0 0 0 rgba(255, 181, 71, 0.5), 0 14px 30px -12px rgba(255, 181, 71, 0.55);
+  transition: transform 0.25s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.3s;
+}
+.btn-primary:hover { transform: translateY(-2px); box-shadow: 0 0 0 6px rgba(255, 181, 71, 0.16), 0 18px 34px -12px rgba(255, 181, 71, 0.7); }
+.btn-primary:active { transform: translateY(0) scale(0.98); }
+.btn-primary--sm { min-height: 44px; padding: 0 20px; font-size: var(--t-meta); }
+.btn-ghost {
+  display: inline-flex;
+  align-items: center;
+  min-height: 52px;
+  padding: 0 24px;
+  border: 1px solid rgba(242, 234, 219, 0.28);
+  border-radius: 12px;
+  background: rgba(8, 19, 42, 0.62);
+  color: var(--ivory);
+  font: 500 var(--t-body) / 1 var(--body);
+  cursor: pointer;
+  transition: border-color 0.2s, background 0.2s;
+}
+.btn-ghost:hover { border-color: var(--amber); background: rgba(255, 181, 71, 0.08); }
+
+/* nav: same container as everything else */
+.nav {
+  position: fixed;
+  inset: 0 0 auto 0;
+  z-index: 20;
+  height: var(--nav-h);
+  border-bottom: 1px solid transparent;
+  transition: background 0.3s, border-color 0.3s;
+}
+.nav--solid { background: rgba(8, 19, 42, 0.94); border-color: rgba(242, 234, 219, 0.08); }
+.nav__in { height: 100%; display: flex; align-items: center; justify-content: space-between; gap: 20px; }
+.nav__brand { display: flex; align-items: center; gap: 10px; color: var(--ivory); text-decoration: none; }
+.nav__brand b { font: 800 22px / 1 var(--display); letter-spacing: -0.03em; }
+.nav__tag { color: var(--ivory-soft); font-size: var(--t-meta); }
+.nav__links { display: flex; gap: 28px; margin-left: auto; margin-right: 12px; }
+.nav__links a { color: var(--ivory-soft); text-decoration: none; font-size: var(--t-meta); font-weight: 500; padding: 8px 2px; transition: color 0.2s; }
+.nav__links a:hover { color: var(--ivory); }
+
+/* ---- scenes ---- */
+.scene { position: relative; }
+.scene__pin { position: relative; height: 100vh; padding: var(--nav-h) 0 24px; display: flex; align-items: center; }
+.scene__in { width: 100%; }
+.scene.is-flow .scene__pin { height: auto; padding: 72px 0; }
+
+/* hero: H1 on columns 1-6, the board on 7-12 (it bleeds into the right margin so 52 flaps fit at a readable size) */
+.hero { position: relative; min-height: 100svh; padding: calc(var(--nav-h) + 24px) 0 56px; display: flex; align-items: center; }
+.hero__grid { width: 100%; align-items: center; row-gap: 44px; }
+.hero__copy { grid-column: 1 / 7; display: grid; justify-items: start; gap: 28px; }
+.hero__title { font-size: var(--t-h1); max-width: 14ch; animation: rise 1s cubic-bezier(0.16, 1, 0.3, 1) both; }
+.hero__lede { margin: 0; max-width: 44ch; font-size: var(--t-lead); line-height: 1.5; color: var(--ivory-soft); text-wrap: pretty; animation: fade-up 0.9s 0.35s cubic-bezier(0.16, 1, 0.3, 1) both; }
+.hero__cta { display: flex; flex-wrap: wrap; gap: 14px; animation: fade-up 0.9s 0.5s cubic-bezier(0.16, 1, 0.3, 1) both; }
+@keyframes rise { from { opacity: 0; transform: translateY(28px); } }
+@keyframes fade-up { from { opacity: 0; transform: translateY(18px); } }
+.hero__board { grid-column: 7 / 13; margin-right: calc(-1 * var(--bleed)); min-width: 0; }
+.hero__board .dboard { width: 100%; border-radius: 14px 0 0 14px; border-right: 0; }
+/* with 1.5-tile gaps the 52-tile hero board and the old-way board need a slightly smaller flap to fit their 6 columns */
+.hero__board .dboard,
+.old .dboard { --fs: clamp(11px, 0.9vw, 16px); }
+
+/* old way: board + stub on columns 1-6, the story on 7-12 */
+.old__grid { align-items: center; row-gap: 32px; }
+.old__left { grid-column: 1 / 7; display: grid; justify-items: start; gap: 28px; min-width: 0; }
+.old__left .scene-head { margin-bottom: 0; }
+.old__lines { grid-column: 7 / 13; list-style: none; margin: 0; padding: 0; display: grid; gap: 22px; min-width: 30ch; }
+.old__line { display: grid; grid-template-columns: auto 1fr; gap: 16px; align-items: baseline; }
+.old__n { font: 500 var(--t-label) / 1 var(--flap-font); letter-spacing: 0.12em; color: var(--amber); }
+.old__text { font-size: clamp(26px, 2.6vw, 40px); line-height: 1.1; letter-spacing: -0.03em; font-weight: 700; text-wrap: pretty; }
+
+/* a torn boarding-pass stub */
+.stub {
+  position: relative;
+  width: min(380px, 100%);
+  padding: 22px 22px 22px 36px;
+  background: var(--ivory);
+  color: var(--night);
+  border-radius: 6px 14px 14px 6px;
+  box-shadow: 0 30px 50px -22px rgba(0, 0, 0, 0.7);
+  clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%, 3% 92%, 0 84%, 3% 76%, 0 68%, 3% 60%, 0 52%, 3% 44%, 0 36%, 3% 28%, 0 20%, 3% 12%, 0 6%);
+}
+.stub::after { content: ''; position: absolute; left: 20px; top: 14px; bottom: 14px; border-left: 2px dashed rgba(8, 19, 42, 0.3); }
+.stub__big { margin: 0; font: 800 var(--t-h2) / 0.95 var(--display); letter-spacing: -0.035em; }
+.stub__body { margin: 8px 0 0; font-size: var(--t-meta); font-weight: 500; line-height: 1.4; }
+.stub__src { margin: 10px 0 0; font: 500 var(--t-label) / 1.4 var(--flap-font); text-transform: uppercase; letter-spacing: 0.12em; color: rgba(8, 19, 42, 0.72); }
+
+/* close: a large boarding pass */
+.close { padding: 96px 0 72px; }
+.close__pass {
+  position: relative;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 0 200px;
+  background: var(--ivory);
+  color: var(--night);
+  border-radius: 14px;
+  box-shadow: 0 50px 90px -30px rgba(0, 0, 0, 0.8);
+}
+.close__main { padding: clamp(28px, 4vw, 56px); display: grid; justify-items: start; }
+.close__main .scene-head { margin-bottom: 40px; }
+.close .kicker { color: var(--amber-dim); }
+.close .display { color: var(--night); }
+.close .lead { color: rgba(8, 19, 42, 0.78); }
+.close__pass .btn-primary { background: var(--night); color: var(--ivory); box-shadow: 0 14px 28px -14px rgba(8, 19, 42, 0.8); }
+.close__tear { position: relative; border-left: 2px dashed rgba(8, 19, 42, 0.32); margin: 14px 0; }
+.close__tear::before,
+.close__tear::after { content: ''; position: absolute; left: -13px; width: 24px; height: 24px; border-radius: 50%; background: #0a1730; }
+.close__tear::before { top: -26px; }
+.close__tear::after { bottom: -26px; }
+.close__stub { display: grid; align-content: center; justify-items: center; gap: 12px; padding: 24px 14px; }
+.close__bars { display: block; width: 150px; height: 100px; background-repeat: no-repeat; }
+.close__code { font: 500 var(--t-label) var(--flap-font); letter-spacing: 0.12em; color: rgba(8, 19, 42, 0.7); }
+
+.foot {
+  position: relative;
+  z-index: 1;
+  border-top: 1px solid rgba(242, 234, 219, 0.08);
+  font: 500 var(--t-label) / 1.4 var(--flap-font);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--ivory-soft);
+}
+.foot__in { display: flex; flex-wrap: wrap; gap: 8px 28px; padding-block: 26px 40px; }
+.foot a { color: var(--ivory); text-underline-offset: 4px; }
+
+/* hero stacks at 1180, the pinned stories at tablet width (they are normal flow there) */
+@media (max-width: 1180px) {
+  .hero { min-height: auto; }
+  .hero__copy, .hero__board { grid-column: 1 / 13; }
+  .hero__board { margin-right: 0; }
+  .hero__board .dboard { border-radius: 14px; border-right: 1px solid rgba(242, 234, 219, 0.08); }
+  .hero__board .dboard { --fs: clamp(13px, 1vw, 16px); }
+}
+@media (max-width: 1024px) {
+  .old__left, .old__lines { grid-column: 1 / 13; }
+  .old .dboard { --fs: clamp(13px, 1vw, 16px); }
+  .old__lines { min-width: 0; }
+}
+@media (max-width: 760px) {
+  .nav__links, .nav__tag { display: none; }
+  .hero { padding-top: calc(var(--nav-h) + 16px); }
+  .close__pass { grid-template-columns: 1fr; }
+  .close__tear { border-left: 0; border-top: 2px dashed rgba(8, 19, 42, 0.32); margin: 0 14px; height: 0; }
+  .close__tear::before, .close__tear::after { top: -13px; bottom: auto; }
+  .close__tear::before { left: -27px; }
+  .close__tear::after { left: auto; right: -27px; }
+  .close__stub { grid-auto-flow: column; justify-content: space-between; padding: 16px 24px; }
+  .close__bars { width: 120px; height: 56px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .hero__title, .hero__lede, .hero__cta { animation: none; }
+}

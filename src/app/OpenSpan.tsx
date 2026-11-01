@@ -6,6 +6,7 @@ import { Shell, useTx } from './shared'
 import { SPAN_ADDRESS, USDC_ADDRESS, publicClient } from '../span/chain'
 import { erc20Abi, spanAbi } from '../span/abi'
 import { buildShareLink } from '../lib/share'
+import { Flap } from '../dep/Flap'
 
 function defaultViewing() {
   const d = new Date(Date.now() + 2 * 24 * 3600 * 1000)
@@ -91,6 +92,7 @@ export default function OpenSpan() {
   return (
     <Shell>
       <section className="panel">
+        <Flap text="CHECK-IN" tone="amber" className="panel__flap" />
         <h1 className="display display--s">Open a Span</h1>
         <p className="panel__lede">
           You lock a bond the same size as the deposit. If you back out, your guest gets both. If they back out, you keep

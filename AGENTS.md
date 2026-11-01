@@ -10,7 +10,7 @@ This is the **project memory** - what Arc Studio remembers about building this a
 
 Span holds a holding deposit between two people who haven't met. The host locks a bond equal to the deposit; the guest pays the deposit; whoever walks away pays (civil-law arrhes rule). No owner, no admin, no fees. Pull payments.
 
-Frontend: tiny router in `src/App.tsx` (`/` scroll-driven workshop board in `src/board/`, `/new` open a Span, `/s/:id` one Span in `src/app/`). Contract ABI and network switch live in `src/span/`. The app runs on Arc mainnet by default; set `VITE_SPAN_NETWORK=testnet` in `.env` to use the testnet deployment (currently NOT set). Reads go through a fallback transport (same-origin `/rpc` relay in `functions/rpc.ts` when hosted, then public Arc RPCs).
+Frontend: tiny router in `src/App.tsx` (`/` the departures-board landing in `src/dep/` (`Landing.tsx` + `scenes/`, split-flap `Flap.tsx`, generic `Board.tsx`, fixed `Backdrop.tsx`), `/new` open a Span, `/s/:id` one Span in `src/app/`). Contract ABI and network switch live in `src/span/`. The app runs on Arc mainnet by default; set `VITE_SPAN_NETWORK=testnet` in `.env` to use the testnet deployment (currently NOT set). Reads go through a fallback transport (same-origin `/rpc` relay in `functions/rpc.ts` when hosted, then public Arc RPCs).
 
 ## Tech Stack
 
@@ -58,3 +58,23 @@ bun run dev
 - Read-only check: `usdc()` returns the USDC address, `nextId()` is 1, and the runtime bytecode equals the compiled `deployedBytecode` byte for byte except the four immutable `usdc` slots (which hold the USDC address).
 - Testnet deployment (still valid): `0xacf81a650c5b2741e280e666ef9ee9666ad131e8`, tx `0x33bac5e9bf56014dea3d67fca62dd6123d511b49a399d2679059702d77ee378a`.
 - No owner, admin key, pause, upgrade path or fee.
+
+## Design: the departures board
+
+- Night airport terminal (`public/dep/terminal.webp`, `public/dep/chart.webp`). Tokens live in `src/index.css`; fonts (Bricolage Grotesque, Martian Mono, Albert Sans) load from `index.html`.
+- `src/dep/Flap.tsx` is the reusable split-flap; `Board.tsx` renders rows of flaps. Landing scenes are pinned with GSAP ScrollTrigger + Lenis above 760px and normal flow below (or with reduced motion).
+- The route scene's SVG shares one coordinate box (`.chart-stage` in `backdrop.css`) with the chart background, so Porto and Lisbon stay on the map.
+- App screens (`/new`, `/s/:id`) are styled in `src/dep/app.css`; logic in `src/app/*` is unchanged.
+
+## Performance rules (keep these)
+
+- Fixed background: transform and opacity only. No `filter` animation, no `backdrop-filter`, no `mix-blend-mode`; grain is the 128px tile `public/dep/grain.png`; the "blur" is a second static pre-blurred terminal layer whose opacity ramps.
+- Terminal/chart crossfade tweens the two layers' opacity (`setChart` in `src/dep/scroll.ts`); never a root CSS variable.
+- Pinned scenes use `scrubProgress` (eased, scrub 0.6, anticipatePin, fastScrollEnd, invalidateOnRefresh) and call setState only when a derived step changes. Scene hand-over uses `createFx` (rise 40px in, fade up 40px out).
+- Flaps flip at most 8 times per tile, only while on screen, with `will-change` only during a flip.
+
+## Type and layout system (keep these)
+
+- Tokens in `src/index.css`: `--t-label` 12px (never smaller), `--t-meta` 14, `--t-body` 18 (16 on mobile), `--t-lead`, `--t-h3`, `--t-h2`, `--t-h1`. Use `.wrap` (1320px content, `var(--pad)` sides), `.grid12` (24px gutters) and `SceneHead` (kicker, H2, lead; 14px / 20px / 40px spacing) for every scene. Everything is left-aligned.
+- Boards: tile pitch `--tw` = 0.74 x `--fs` + 1px, `--fs: clamp(13px,1vw,16px)`; each column is a fixed number of tiles. The hero board is on columns 7-12 and bleeds into the right margin so 52 flaps fit.
+- Pinned scenes are normal flow at 1024px and below (and with reduced motion).
