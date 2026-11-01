@@ -5,7 +5,7 @@
 **Holding deposits between strangers, on Arc.**
 The host locks a bond. The guest locks the deposit. Whoever walks away pays.
 
-[Live app](https://span-arc.pages.dev) · [Contract on Arc mainnet](https://explorer.arc.io/address/0x17126d2F33C988fcF11952423d4585Bf94b1Cf67) · [Arc Studio project](https://studio.arc.io/app/9b691344-0713-40e0-9f9b-bb86fbe978dd)
+[Live app](https://span-arc.pages.dev) · [Demo video](https://youtu.be/RpvOx0yRLxg) · [Contract on Arc mainnet](https://explorer.arc.io/address/0x17126d2F33C988fcF11952423d4585Bf94b1Cf67) · [Arc Studio project](https://studio.arc.io/app/9b691344-0713-40e0-9f9b-bb86fbe978dd)
 
 ![Arc mainnet](https://img.shields.io/badge/Arc-mainnet-08132A?style=flat-square&labelColor=FFB547&color=08132A)
 ![USDC](https://img.shields.io/badge/paid%20in-USDC-2775CA?style=flat-square)
