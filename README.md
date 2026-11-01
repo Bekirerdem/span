@@ -95,6 +95,15 @@ There is no arbiter, no owner, no admin key, no pause, no upgrade path and no fe
 | Arc mainnet (5042) | [`0x17126d2F33C988fcF11952423d4585Bf94b1Cf67`](https://explorer.arc.io/address/0x17126d2F33C988fcF11952423d4585Bf94b1Cf67) | [`0x0950…5d63`](https://explorer.arc.io/tx/0x09502686485bd5abb320ae1a8a18b6533c3ef45a62063e1370d6961d9ca55d63) |
 | Arc Testnet (5042002) | [`0xacf81a650c5b2741e280e666ef9ee9666ad131e8`](https://explorer.testnet.arc.io/address/0xacf81a650c5b2741e280e666ef9ee9666ad131e8) | [`0x33ba…378a`](https://explorer.testnet.arc.io/tx/0x33bac5e9bf56014dea3d67fca62dd6123d511b49a399d2679059702d77ee378a) |
 
+**First Span on mainnet** (1 USDC deposit, [`/s/1`](https://span-arc.pages.dev/s/1?t=Room%20in%20Arroios%2C%20Lisbon)), host `0x39AE…5794`, guest `0x707B…ecd3`:
+
+| Step | Tx |
+| --- | --- |
+| Host opens the Span and locks a 1 USDC bond | [`0xeb51…53ef`](https://explorer.arc.io/tx/0xeb51376345d171af46e71d557b3f1011bc7bd26d37a34779cd2fb386603153ef) |
+| Guest pays the 1 USDC deposit | [`0xcca3…91c6`](https://explorer.arc.io/tx/0xcca3f5a6464b55cf3c0c74d5df383fc33f44cf02623dc74972d2733f5ae391c6) |
+| Guest confirms the handover | [`0x395d…a007`](https://explorer.arc.io/tx/0x395d19adb764b7d9b16d5db959a6ab88e43c577ea02a23ee011205a2b61fa007) |
+| Host withdraws 2 USDC | [`0x43c2…44f2`](https://explorer.arc.io/tx/0x43c2effa5781221fa91b7e7cee8bd92bf5d3202476ee3cb2250332615ef244f2) |
+
 Both use USDC `0x3600000000000000000000000000000000000000`. The mainnet contract is the exact bytecode Arc Studio compiled and tested (solc 0.8.28), deployed from the builder's own wallet because Arc Studio deploys to testnet only and Circle API-key creation failed for this account. The runtime code matches the compiled `deployedBytecode` except for the immutable USDC address slots.
 
 ## Built with Arc Studio
