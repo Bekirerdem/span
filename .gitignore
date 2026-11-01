@@ -1,0 +1,10 @@
+node_modules/
+dist/
+contracts/out/
+contracts/cache/
+.env
+.env.*
+console.jsonl
+.arc-studio/
+.compass/
+.agents/
